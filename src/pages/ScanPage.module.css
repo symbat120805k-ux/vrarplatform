@@ -152,6 +152,15 @@
   max-width: 320px;
 }
 
+.mindMissingHint {
+  margin: 0.85rem 0 0;
+  max-width: 340px;
+  text-align: center;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: rgba(255, 200, 150, 0.92);
+}
+
 .title {
   margin: 0;
   font-size: clamp(1.5rem, 4vw, 2rem);

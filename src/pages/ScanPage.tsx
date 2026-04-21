@@ -103,7 +103,7 @@ export function ScanPage() {
     mindPresent === true
       ? 'Наведи камеру на карточку. Когда она распознается, откроется видео. Один раз коснись экрана — включится звук.'
       : mindPresent === false
-        ? 'Сейчас доступен только предпросмотр с камеры.'
+        ? 'Сейчас доступен только предпросмотр с камеры — распознавание карточки выключено.'
         : 'Загрузка…'
 
   return (
@@ -144,6 +144,14 @@ export function ScanPage() {
 
         <div className={styles.frame}>
           <p className={styles.frameHint}>{frameText}</p>
+          {mindPresent === false ? (
+            <p className={styles.mindMissingHint}>
+              Нужен файл <strong>targets.mind</strong> в папке{' '}
+              <strong>public/media/ar/{element.number}/</strong> (рядом с card.png). Его получают в
+              компиляторе Mind AR, загрузив ту же картинку, что и card.png. Подробнее:{' '}
+              <strong>public/media/ar/README.txt</strong>.
+            </p>
+          ) : null}
         </div>
 
         {mindPresent === true && !soundUnlocked ? (
