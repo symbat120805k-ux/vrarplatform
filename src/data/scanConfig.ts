@@ -22,12 +22,16 @@ export type ScanAssetPaths = {
 /** Первые 10 элементов таблицы — у каждого своя AR-карточка и своё видео. */
 const FIRST_10 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as const
 
+/** Папки 4–10: карточка как JPEG (card.jpg). Остальные — card.png. */
+const CARD_IS_JPEG = new Set([4, 5, 6, 7, 8, 9, 10])
+
 function scanPathsForElement(n: number): ScanAssetPaths {
   const base = `/media/ar/${n}`
+  const cardPreview = CARD_IS_JPEG.has(n) ? `${base}/card.jpg` : `${base}/card.png`
   return {
     mindFile: `${base}/targets.mind`,
     overlayVideo: `${base}/video.mp4`,
-    cardPreview: `${base}/card.png`,
+    cardPreview,
   }
 }
 
@@ -35,15 +39,39 @@ const BASE_SCAN_ASSETS = Object.fromEntries(
   FIRST_10.map((n) => [n, scanPathsForElement(n)]),
 ) as Record<number, ScanAssetPaths>
 
-/** Гелий (№2): оверлей — YouTube ow3mDBcxMY8, без локального video.mp4. */
-export const SCAN_ASSETS: Record<number, ScanAssetPaths> = {
-  ...BASE_SCAN_ASSETS,
-  2: {
-    mindFile: BASE_SCAN_ASSETS[2].mindFile,
-    cardPreview: BASE_SCAN_ASSETS[2].cardPreview,
-    youtubeVideoId: 'ow3mDBcxMY8',
-  },
+/**
+ * Оверлей при сканировании: YouTube (id из watch?v=…).
+ * Водород (1) — только локальный ar-video.mp4.
+ */
+const SCAN_YOUTUBE_ID: Partial<Record<number, string>> = {
+  2: 'ow3mDBcxMY8',
+  3: 'ZTTb-GomRmc',
+  4: 'z2JJ_YccUXQ',
+  5: 'YRWWf3Obsdg',
+  6: 'AEj_Zpgdmkw',
+  7: '8FFYKOzZvzk',
+  8: 'kfPwZ8Hu5CU',
+  9: 'W5B9k3RjhEA',
+  10: 'CjXagBB9y9U',
 }
+
+function buildScanAssets(): Record<number, ScanAssetPaths> {
+  const out: Record<number, ScanAssetPaths> = { ...BASE_SCAN_ASSETS }
+  out[1] = {
+    ...BASE_SCAN_ASSETS[1],
+    overlayVideo: '/media/ar/1/ar-video.mp4',
+  }
+  for (const n of FIRST_10) {
+    const yt = SCAN_YOUTUBE_ID[n]
+    if (yt) {
+      const b = BASE_SCAN_ASSETS[n]
+      out[n] = { mindFile: b.mindFile, cardPreview: b.cardPreview, youtubeVideoId: yt }
+    }
+  }
+  return out
+}
+
+export const SCAN_ASSETS: Record<number, ScanAssetPaths> = buildScanAssets()
 
 export function getScanAssets(elementNumber: number): ScanAssetPaths | undefined {
   return SCAN_ASSETS[elementNumber]
