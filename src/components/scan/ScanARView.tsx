@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
 import type { ScanAssetPaths } from '@/data/scanConfig'
+import { publicAssetUrl } from '@/utils/publicAssetUrl'
 import styles from './ScanARView.module.css'
 
 type Props = {
@@ -28,7 +29,7 @@ export function ScanARView({ assets, onTracked }: Props) {
 
         const instance = new MindARThree({
           container: containerRef.current,
-          imageTargetSrc: assets.mindFile,
+          imageTargetSrc: publicAssetUrl(assets.mindFile),
           uiLoading: 'no',
           uiScanning: 'no',
           uiError: 'no',

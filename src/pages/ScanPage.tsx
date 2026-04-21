@@ -4,6 +4,7 @@ import { Spotlight } from '@/components/ui/spotlight'
 import { ScanARView } from '@/components/scan/ScanARView'
 import { getElementByNumber, CATEGORY_COLORS } from '../data/elements'
 import { getScanAssets, isScanSupported } from '../data/scanConfig'
+import { publicAssetUrl } from '@/utils/publicAssetUrl'
 import styles from './ScanPage.module.css'
 
 export function ScanPage() {
@@ -27,7 +28,7 @@ export function ScanPage() {
   useEffect(() => {
     if (!supported || !assets) return
     let cancelled = false
-    fetch(assets.mindFile, { method: 'HEAD' })
+    fetch(publicAssetUrl(assets.mindFile), { method: 'HEAD' })
       .then((res) => {
         if (!cancelled) setMindPresent(res.ok)
       })
@@ -180,7 +181,7 @@ export function ScanPage() {
             <video
               ref={revealVideoRef}
               className={`${styles.revealVideo} ${tracked ? styles.revealVideoVisible : ''}`}
-              src={assets.overlayVideo}
+              src={publicAssetUrl(assets.overlayVideo)}
               playsInline
               muted={!soundUnlocked}
               loop

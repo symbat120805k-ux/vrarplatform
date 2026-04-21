@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useParams, Navigate, Link } from 'react-router-dom'
 import { Canvas } from '@react-three/fiber'
 import { createXRStore } from '@react-three/xr'
@@ -6,6 +6,7 @@ import { Spotlight } from '@/components/ui/spotlight'
 import { getElementByNumber, CATEGORY_COLORS } from '../data/elements'
 import { getScanAssets } from '../data/scanConfig'
 import { ElementScene } from '../components/ElementScene'
+import { arCardImageUrls } from '@/utils/arCardImageUrls'
 import styles from './ElementPage.module.css'
 
 const xrStore = createXRStore()
@@ -15,17 +16,27 @@ export function ElementPage() {
   const num = number ? parseInt(number, 10) : NaN
   const element = Number.isNaN(num) ? undefined : getElementByNumber(num)
   const [cardPreviewFailed, setCardPreviewFailed] = useState(false)
+  const [cardSrcIndex, setCardSrcIndex] = useState(0)
+
+  const scanAssets = element ? getScanAssets(element.number) : undefined
+  const cardImageCandidates = useMemo(
+    () =>
+      scanAssets && element
+        ? arCardImageUrls(element.number, scanAssets.cardPreview)
+        : [],
+    [element?.number, scanAssets?.cardPreview],
+  )
 
   useEffect(() => {
     setCardPreviewFailed(false)
-  }, [element?.number])
+    setCardSrcIndex(0)
+  }, [element?.number, scanAssets?.cardPreview])
 
   if (!element) {
     return <Navigate to="/table" replace />
   }
 
   const color = CATEGORY_COLORS[element.category]
-  const scanAssets = getScanAssets(element.number)
 
   return (
     <div className={styles.page}>
@@ -96,21 +107,28 @@ export function ElementPage() {
                 Карточка для AR-сканирования
               </h3>
               <div className={styles.photo}>
-                {!cardPreviewFailed ? (
+                {!cardPreviewFailed && cardImageCandidates.length > 0 ? (
                   <img
-                    src={scanAssets.cardPreview}
+                    key={`${cardSrcIndex}-${cardImageCandidates[cardSrcIndex]}`}
+                    src={cardImageCandidates[cardSrcIndex]}
                     alt={`Карточка элемента ${element.nameRu} для сканирования`}
                     className={styles.photoImg}
-                    onError={() => setCardPreviewFailed(true)}
+                    onError={() => {
+                      setCardSrcIndex((i) => {
+                        if (i + 1 < cardImageCandidates.length) return i + 1
+                        setCardPreviewFailed(true)
+                        return i
+                      })
+                    }}
                   />
-                ) : (
+                ) : cardPreviewFailed ? (
                   <p className={styles.photoMissing}>
                     Добавь в проект файл карточки{' '}
                     <code className={styles.photoMissingCode}>public{scanAssets.cardPreview}</code> — то же
                     изображение, что пойдёт в компилятор Mind AR (см.{' '}
                     <code className={styles.photoMissingCode}>public/media/ar/README.txt</code>).
                   </p>
-                )}
+                ) : null}
                 <p className={styles.photoCaption}>
                   Распечатай или открой эту карточку на другом устройстве и на странице сканирования
                   наведи на неё камеру.

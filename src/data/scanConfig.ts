@@ -74,7 +74,9 @@ function buildScanAssets(): Record<number, ScanAssetPaths> {
 export const SCAN_ASSETS: Record<number, ScanAssetPaths> = buildScanAssets()
 
 export function getScanAssets(elementNumber: number): ScanAssetPaths | undefined {
-  return SCAN_ASSETS[elementNumber]
+  const direct = SCAN_ASSETS[elementNumber]
+  if (direct) return direct
+  return (SCAN_ASSETS as Record<string, ScanAssetPaths | undefined>)[String(elementNumber)]
 }
 
 export function isScanSupported(elementNumber: number): boolean {
