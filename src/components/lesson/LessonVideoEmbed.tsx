@@ -11,7 +11,8 @@ type LessonVideoEmbedProps = {
 export function LessonVideoEmbed({ videoId, title }: LessonVideoEmbedProps) {
   if (!videoId.trim()) return null
 
-  const src = `https://www.youtube.com/embed/cxFb4hmfVT0?si=4_ghHk2VDGTSdq_P`
+  const id = encodeURIComponent(videoId.trim())
+  const src = `https://www.youtube-nocookie.com/embed/${id}`
 
   return (
     <div className={styles.wrap}>
