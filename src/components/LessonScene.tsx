@@ -10,10 +10,15 @@ import {
 import { LessonImmersiveVideo } from './lesson/LessonImmersiveVideo'
 import { LessonXRMediaProvider } from './lesson/LessonXRMediaContext'
 import { LessonXRVideoControls } from './lesson/LessonXRVideoControls'
+import { LESSON_IMMERSIVE, lessonExitPanelPosition } from './lesson/lessonVRLayout'
 import { XRExitPanel } from './xr/XRExitPanel'
 
 /** Центр обзора — большой видеоэкран впереди. */
-const ORBIT_TARGET = [0, 1.5, -2.5] as const
+const ORBIT_TARGET = [
+  LESSON_IMMERSIVE.screenPos[0],
+  LESSON_IMMERSIVE.screenPos[1] - 0.05,
+  LESSON_IMMERSIVE.screenPos[2] + 0.4,
+] as const
 
 function XRPlayerRig() {
   const ref = useRef<Group>(null)
@@ -57,8 +62,7 @@ export function LessonScene({ xrStore, immersiveVideoSrc }: LessonSceneProps) {
         <pointLight position={[0, 2.5, -1]} intensity={0.4} color="#a8c8ff" />
         <LessonImmersiveVideo src={immersiveVideoSrc} />
         <LessonXRVideoControls />
-        {/* Слева от экрана: справа панель «Видео» — см. LessonXRVideoControls */}
-        <XRExitPanel position={[-0.82, 1.48, -0.88]} />
+        <XRExitPanel position={lessonExitPanelPosition()} />
         <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]} receiveShadow>
           <planeGeometry args={[10, 10]} />
           <meshStandardMaterial color="#2c3e50" />

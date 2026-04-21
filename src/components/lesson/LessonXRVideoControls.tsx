@@ -2,6 +2,7 @@ import { useXR } from '@react-three/xr'
 import { Billboard, RoundedBox, Text } from '@react-three/drei'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useLessonXRMedia } from './LessonXRMediaContext'
+import { lessonVideoControlsPosition } from './lessonVRLayout'
 
 const VOL_STEP = 0.12
 const SEEK_STEP = 10
@@ -127,8 +128,9 @@ export function LessonXRVideoControls() {
     void video.play().catch(() => {})
   }
 
+  const [px, py, pz] = lessonVideoControlsPosition()
   return (
-    <Billboard position={[0.82, 1.42, -0.88]} follow lockX={false} lockY={false} lockZ={false}>
+    <Billboard position={[px, py, pz]} follow lockX={false} lockY={false} lockZ={false}>
       <group>
         <RoundedBox args={[0.54, 0.88, 0.04]} radius={0.04} position={[0, 0, -0.02]} smoothness={3}>
           <meshStandardMaterial color="#0d1117" metalness={0.2} roughness={0.85} opacity={0.92} transparent />

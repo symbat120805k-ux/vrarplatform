@@ -21,40 +21,41 @@ export type Lesson = {
 /**
  * Ролик для экрана в VR — всегда прямой MP4 (URL или `/videos/...`), не YouTube.
  *
- * Здесь — короткие бесплатные ролики Mixkit (лицензия «Free» на mixkit.co), подобранные по смыслу
- * урока. Это не учебный фильм 1:1 с текстом, а визуальная «атмосфера» темы. Свои MP4 — в
+ * Здесь — ролики Mixkit с упором на лабораторию / эксперимент (длиннее прежних), по смыслу урока.
+ * Проверьте лицензию на странице клипа на mixkit.co (часть роликов — «Free», часть — «Restricted»).
+ * Свои MP4 — в
  * public/videos/ и сюда путь вида `/videos/имя.mp4` (см. public/videos/README.txt).
  *
  * Шаблон CDN: https://assets.mixkit.co/videos/{id}/{id}-720.mp4
  */
 const mix = (id: number) => `https://assets.mixkit.co/videos/${id}/${id}-720.mp4`
 
-/** Один ролик на урок; в комментарии — что на видео и страница на Mixkit. */
+/** Один ролик на урок; ID Mixkit — дольше и ближе к «лаборатории», чем короткие демо. */
 const VR_CLIP_BY_SLUG: Readonly<Record<string, string>> = {
-  // Морская вода, волны — ассоциация с H₂O
-  'water-molecule': mix(2091),
-  // Лаборатория: смешивание жидкостей в колбе
-  'acids-intro': mix(4719),
-  // Изготовление мыла / щелочная тематика быта
-  'bases-alkali': mix(2808),
-  // Пробирка, подготовка образца (соли, растворы в лаборатории)
-  'salts-neutralization': mix(4767),
-  // Яркое горение, искры окисления
+  // Вода в лабораторной посуде, капли (~34 с)
+  'water-molecule': mix(17629),
+  // Работа с колбами и жидкостями в лаборатории
+  'acids-intro': mix(17704),
+  // Смешивание реагентов, колбы (~32 с)
+  'bases-alkali': mix(44815),
+  // Эксперимент с пробирками и растворами (~36 с)
+  'salts-neutralization': mix(46748),
+  // Интенсивное горение / уголь, окисление
   'combustion-oxidation': mix(3459),
-  // Разные вещества в стеклянной посуде — «сравнение» материалов / элементов
-  'periodic-trends': mix(4786),
-  // Молекулярная модель глюкозы
-  'chemical-bonding': mix(3768),
-  // Перемешивание жидкостей и чернил — наглядно про растворы
-  'solutions-solubility': mix(44816),
-  // Огонь и горящие частицы — окисление, энергия простых веществ
-  'oxygen-hydrogen': mix(4426),
-  // Очки и перчатки у микроскопа
+  // Лабораторный стол, колбы, химия в действии (~25 с)
+  'periodic-trends': mix(46749),
+  // Модель молекулы у доски (~35 с; на Mixkit может быть «Restricted»)
+  'chemical-bonding': mix(9462),
+  // Капли и пробирки, растворение
+  'solutions-solubility': mix(17456),
+  // Лабораторный эксперимент с горелкой / газом
+  'oxygen-hydrogen': mix(18052),
+  // Защита в лаборатории (очки, перчатки)
   'lab-safety': mix(4712),
 }
 
 function immersiveSrcForSlug(slug: string): string {
-  return VR_CLIP_BY_SLUG[slug] ?? mix(2091)
+  return VR_CLIP_BY_SLUG[slug] ?? mix(17629)
 }
 
 export const LESSONS: readonly Lesson[] = [
@@ -62,7 +63,7 @@ export const LESSONS: readonly Lesson[] = [
     slug: 'water-molecule',
     title: 'Молекула воды',
     subtitle: 'Урок 1 · H₂O',
-    youtubeVideoId: 'YE7VzlLtp-4',
+    youtubeVideoId: 'AKy5AlvjqIo',
     immersiveVideoSrc: immersiveSrcForSlug('water-molecule'),
     sections: [
       {
@@ -84,7 +85,7 @@ export const LESSONS: readonly Lesson[] = [
     slug: 'acids-intro',
     title: 'Кислоты: первое знакомство',
     subtitle: 'Урок 2 · основы',
-    youtubeVideoId: 'YE7VzlLtp-4',
+    youtubeVideoId: 'iVPE2H2yYnY',
     immersiveVideoSrc: immersiveSrcForSlug('acids-intro'),
     sections: [
       {
@@ -106,7 +107,7 @@ export const LESSONS: readonly Lesson[] = [
     slug: 'bases-alkali',
     title: 'Основания и щёлочи',
     subtitle: 'Урок 3 · pH выше нейтрали',
-    youtubeVideoId: 'YE7VzlLtp-4',
+    youtubeVideoId: 'ADhMYqiDkn0',
     immersiveVideoSrc: immersiveSrcForSlug('bases-alkali'),
     sections: [
       {
@@ -128,7 +129,7 @@ export const LESSONS: readonly Lesson[] = [
     slug: 'salts-neutralization',
     title: 'Соли и нейтрализация',
     subtitle: 'Урок 4 · кислота + основание',
-    youtubeVideoId: 'YE7VzlLtp-4',
+    youtubeVideoId: 'kycRz0VGjy4',
     immersiveVideoSrc: immersiveSrcForSlug('salts-neutralization'),
     sections: [
       {
@@ -150,7 +151,7 @@ export const LESSONS: readonly Lesson[] = [
     slug: 'combustion-oxidation',
     title: 'Горение и окисление',
     subtitle: 'Урок 5 · кислород и энергия',
-    youtubeVideoId: 'YE7VzlLtp-4',
+    youtubeVideoId: 'X4JYS1hY8Tc',
     immersiveVideoSrc: immersiveSrcForSlug('combustion-oxidation'),
     sections: [
       {
@@ -172,7 +173,7 @@ export const LESSONS: readonly Lesson[] = [
     slug: 'periodic-trends',
     title: 'Периодический закон кратко',
     subtitle: 'Урок 6 · таблица Менделеева',
-    youtubeVideoId: 'YE7VzlLtp-4',
+    youtubeVideoId: 'oFBqizueCd4',
     immersiveVideoSrc: immersiveSrcForSlug('periodic-trends'),
     sections: [
       {
@@ -194,7 +195,7 @@ export const LESSONS: readonly Lesson[] = [
     slug: 'chemical-bonding',
     title: 'Химическая связь',
     subtitle: 'Урок 7 · ионная и ковалентная',
-    youtubeVideoId: 'YE7VzlLtp-4',
+    youtubeVideoId: 'f2m1UdeVHuI',
     immersiveVideoSrc: immersiveSrcForSlug('chemical-bonding'),
     sections: [
       {
@@ -216,7 +217,7 @@ export const LESSONS: readonly Lesson[] = [
     slug: 'solutions-solubility',
     title: 'Растворы и растворимость',
     subtitle: 'Урок 8 · растворитель и растворённое',
-    youtubeVideoId: 'YE7VzlLtp-4',
+    youtubeVideoId: 'sYSi5BRxhtU',
     immersiveVideoSrc: immersiveSrcForSlug('solutions-solubility'),
     sections: [
       {
@@ -238,7 +239,7 @@ export const LESSONS: readonly Lesson[] = [
     slug: 'oxygen-hydrogen',
     title: 'Кислород и водород',
     subtitle: 'Урок 9 · простые вещества',
-    youtubeVideoId: 'YE7VzlLtp-4',
+    youtubeVideoId: '19CHqYDFN8s',
     immersiveVideoSrc: immersiveSrcForSlug('oxygen-hydrogen'),
     sections: [
       {
@@ -260,7 +261,7 @@ export const LESSONS: readonly Lesson[] = [
     slug: 'lab-safety',
     title: 'Безопасность в лаборатории',
     subtitle: 'Урок 10 · правила и привычки',
-    youtubeVideoId: 'YE7VzlLtp-4',
+    youtubeVideoId: 'xhWP2eyibZU',
     immersiveVideoSrc: immersiveSrcForSlug('lab-safety'),
     sections: [
       {

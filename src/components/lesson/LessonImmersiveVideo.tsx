@@ -4,10 +4,11 @@ import { useEffect, useRef, useState } from 'react'
 import * as THREE from 'three'
 import { DoubleSide } from 'three'
 import { useLessonXRMedia } from './LessonXRMediaContext'
+import { LESSON_IMMERSIVE } from './lessonVRLayout'
 
-const ASPECT = 16 / 9
-const SCREEN_H = 1.45
-const SCREEN_W = SCREEN_H * ASPECT
+const SCREEN_H = LESSON_IMMERSIVE.screenH
+const SCREEN_W = LESSON_IMMERSIVE.screenW
+const SCREEN_POS = LESSON_IMMERSIVE.screenPos
 
 function isFilesystemPath(src: string) {
   return /^[a-zA-Z]:\\/.test(src) || src.startsWith('file:')
@@ -46,7 +47,7 @@ function VideoScreen({ src }: { src: string }) {
     const video = document.createElement('video')
     video.playsInline = true
     video.muted = true
-    video.loop = true
+    video.loop = false
     video.setAttribute('playsinline', '')
     video.setAttribute('webkit-playsinline', '')
 
@@ -76,12 +77,18 @@ function VideoScreen({ src }: { src: string }) {
     }
 
     video.addEventListener('error', onError)
+    const onEnded = () => {
+      video.pause()
+      video.currentTime = 0
+    }
     video.addEventListener('loadeddata', onLoaded)
+    video.addEventListener('ended', onEnded)
     video.load()
 
     return () => {
       video.removeEventListener('error', onError)
       video.removeEventListener('loadeddata', onLoaded)
+      video.removeEventListener('ended', onEnded)
       setVideoElement(null)
       video.pause()
       video.removeAttribute('src')
@@ -100,7 +107,7 @@ function VideoScreen({ src }: { src: string }) {
 
   if (failed || !texture) {
     return (
-      <group position={[0, 1.55, -2.9]}>
+      <group position={SCREEN_POS}>
         <mesh position={[0, 0, -0.03]} scale={[SCREEN_W + 0.12, SCREEN_H + 0.12, 1]}>
           <planeGeometry args={[1, 1]} />
           <meshStandardMaterial color="#2a1515" emissive="#401010" emissiveIntensity={0.35} />
@@ -114,7 +121,7 @@ function VideoScreen({ src }: { src: string }) {
   }
 
   return (
-    <group position={[0, 1.55, -2.9]}>
+    <group position={SCREEN_POS}>
       <mesh position={[0, 0, -0.03]} scale={[SCREEN_W + 0.12, SCREEN_H + 0.12, 1]}>
         <planeGeometry args={[1, 1]} />
         <meshStandardMaterial color="#0d1117" metalness={0.15} roughness={0.9} />
