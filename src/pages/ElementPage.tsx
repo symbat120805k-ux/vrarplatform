@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { useParams, Navigate, Link } from 'react-router-dom'
 import { Canvas } from '@react-three/fiber'
 import { createXRStore } from '@react-three/xr'
@@ -5,7 +6,6 @@ import { Spotlight } from '@/components/ui/spotlight'
 import { getElementByNumber, CATEGORY_COLORS } from '../data/elements'
 import { getScanAssets } from '../data/scanConfig'
 import { ElementScene } from '../components/ElementScene'
-import hydrogenCardImg from '../assets/react.svg'
 import styles from './ElementPage.module.css'
 
 const xrStore = createXRStore()
@@ -14,6 +14,11 @@ export function ElementPage() {
   const { number } = useParams<{ number: string }>()
   const num = number ? parseInt(number, 10) : NaN
   const element = Number.isNaN(num) ? undefined : getElementByNumber(num)
+  const [cardPreviewFailed, setCardPreviewFailed] = useState(false)
+
+  useEffect(() => {
+    setCardPreviewFailed(false)
+  }, [element?.number])
 
   if (!element) {
     return <Navigate to="/table" replace />
@@ -91,14 +96,21 @@ export function ElementPage() {
                 Карточка для AR-сканирования
               </h3>
               <div className={styles.photo}>
-                <img
-                  src={scanAssets.cardPreview}
-                  alt={`Карточка элемента ${element.nameRu} для сканирования`}
-                  className={styles.photoImg}
-                  onError={(e) => {
-                    e.currentTarget.src = hydrogenCardImg
-                  }}
-                />
+                {!cardPreviewFailed ? (
+                  <img
+                    src={scanAssets.cardPreview}
+                    alt={`Карточка элемента ${element.nameRu} для сканирования`}
+                    className={styles.photoImg}
+                    onError={() => setCardPreviewFailed(true)}
+                  />
+                ) : (
+                  <p className={styles.photoMissing}>
+                    Добавь в проект файл карточки{' '}
+                    <code className={styles.photoMissingCode}>public{scanAssets.cardPreview}</code> — то же
+                    изображение, что пойдёт в компилятор Mind AR (см.{' '}
+                    <code className={styles.photoMissingCode}>public/media/ar/README.txt</code>).
+                  </p>
+                )}
                 <p className={styles.photoCaption}>
                   Распечатай или открой эту карточку на другом устройстве и на странице сканирования
                   наведи на неё камеру.

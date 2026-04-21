@@ -73,16 +73,21 @@ export function ScanPage() {
     return () => window.removeEventListener('pointerdown', unlock, { capture: true })
   }, [mindPresent])
 
+  const youtubeId = assets?.youtubeVideoId?.trim()
+  const useYoutubeOverlay = Boolean(youtubeId)
+
   useEffect(() => {
     const el = revealVideoRef.current
-    if (!el || mindPresent !== true) return
+    if (!el || mindPresent !== true || useYoutubeOverlay) return
+    const src = assets?.overlayVideo
+    if (!src) return
     if (tracked) {
       void el.play().catch(() => {})
     } else {
       el.pause()
       el.currentTime = 0
     }
-  }, [tracked, mindPresent, soundUnlocked])
+  }, [tracked, mindPresent, soundUnlocked, useYoutubeOverlay, assets?.overlayVideo])
 
   if (!element) {
     return <Navigate to="/table" replace />
@@ -153,16 +158,28 @@ export function ScanPage() {
 
       {mindPresent === true ? (
         <>
-          <video
-            ref={revealVideoRef}
-            className={`${styles.revealVideo} ${tracked ? styles.revealVideoVisible : ''}`}
-            src={assets.overlayVideo}
-            playsInline
-            muted={!soundUnlocked}
-            loop
-            preload="auto"
-            aria-hidden={!tracked}
-          />
+          {useYoutubeOverlay && tracked && youtubeId ? (
+            <iframe
+              key={`${youtubeId}-${soundUnlocked}`}
+              title="Видео по карточке"
+              className={`${styles.revealVideo} ${styles.revealVideoVisible}`}
+              src={`https://www.youtube-nocookie.com/embed/${encodeURIComponent(youtubeId)}?autoplay=1&mute=${soundUnlocked ? 0 : 1}&rel=0&playsinline=1`}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+            />
+          ) : null}
+          {!useYoutubeOverlay && assets.overlayVideo ? (
+            <video
+              ref={revealVideoRef}
+              className={`${styles.revealVideo} ${tracked ? styles.revealVideoVisible : ''}`}
+              src={assets.overlayVideo}
+              playsInline
+              muted={!soundUnlocked}
+              loop
+              preload="auto"
+              aria-hidden={!tracked}
+            />
+          ) : null}
           {tracked ? (
             <Link
               to={`/element/${element.number}`}

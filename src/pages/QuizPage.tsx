@@ -95,9 +95,6 @@ function QuizPageContent() {
         <button type="button" className={styles.btnVr} onClick={() => xrStore.enterVR()}>
           Начать тест в VR
         </button>
-        <button type="button" className={styles.btnAr} onClick={() => xrStore.enterAR()}>
-          AR (телефон)
-        </button>
       </div>
 
       <div className={xrActive ? styles.desktopHidden : undefined} aria-hidden={xrActive}>

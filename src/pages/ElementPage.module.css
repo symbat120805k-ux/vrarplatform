@@ -268,6 +268,23 @@
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.7);
 }
 
+.photoMissing {
+  margin: 0;
+  max-width: 360px;
+  padding: 1rem 1.1rem;
+  border-radius: 12px;
+  border: 1px dashed rgba(255, 255, 255, 0.35);
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.photoMissingCode {
+  font-size: 0.82em;
+  word-break: break-all;
+  color: rgba(167, 243, 208, 0.95);
+}
+
 .photoCaption {
   margin: 0;
   font-size: 0.9rem;
