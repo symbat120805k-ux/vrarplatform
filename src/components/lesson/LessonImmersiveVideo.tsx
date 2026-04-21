@@ -1,4 +1,5 @@
 import { useFrame, useThree } from '@react-three/fiber'
+import { useXR } from '@react-three/xr'
 import { useEffect, useRef, useState } from 'react'
 import * as THREE from 'three'
 import { DoubleSide } from 'three'
@@ -14,10 +15,20 @@ function isFilesystemPath(src: string) {
 
 function VideoScreen({ src }: { src: string }) {
   const gl = useThree((s) => s.gl)
+  const xrSession = useXR((s) => s.session)
   const { setVideoElement } = useLessonXRMedia()
   const [texture, setTexture] = useState<THREE.VideoTexture | null>(null)
   const [failed, setFailed] = useState(false)
   const videoRef = useRef<HTMLVideoElement | null>(null)
+
+  useEffect(() => {
+    if (xrSession == null || texture == null) return
+    const video = videoRef.current
+    if (video == null) return
+    void video.play().catch((e) => {
+      console.warn('[VR-видео] повтор play в XR:', e)
+    })
+  }, [xrSession, texture])
 
   useEffect(() => {
     setFailed(false)

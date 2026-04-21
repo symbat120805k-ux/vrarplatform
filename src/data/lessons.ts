@@ -18,8 +18,44 @@ export type Lesson = {
   sections: LessonSection[]
 }
 
-/** Один общий MP4 по умолчанию; при желании задай у каждого урока свой файл в public/videos/. */
-const DEFAULT_VR_VIDEO = '/videos/hidrogen.mp4'
+/**
+ * Ролик для экрана в VR — всегда прямой MP4 (URL или `/videos/...`), не YouTube.
+ *
+ * Здесь — короткие бесплатные ролики Mixkit (лицензия «Free» на mixkit.co), подобранные по смыслу
+ * урока. Это не учебный фильм 1:1 с текстом, а визуальная «атмосфера» темы. Свои MP4 — в
+ * public/videos/ и сюда путь вида `/videos/имя.mp4` (см. public/videos/README.txt).
+ *
+ * Шаблон CDN: https://assets.mixkit.co/videos/{id}/{id}-720.mp4
+ */
+const mix = (id: number) => `https://assets.mixkit.co/videos/${id}/${id}-720.mp4`
+
+/** Один ролик на урок; в комментарии — что на видео и страница на Mixkit. */
+const VR_CLIP_BY_SLUG: Readonly<Record<string, string>> = {
+  // Морская вода, волны — ассоциация с H₂O
+  'water-molecule': mix(2091),
+  // Лаборатория: смешивание жидкостей в колбе
+  'acids-intro': mix(4719),
+  // Изготовление мыла / щелочная тематика быта
+  'bases-alkali': mix(2808),
+  // Пробирка, подготовка образца (соли, растворы в лаборатории)
+  'salts-neutralization': mix(4767),
+  // Яркое горение, искры окисления
+  'combustion-oxidation': mix(3459),
+  // Разные вещества в стеклянной посуде — «сравнение» материалов / элементов
+  'periodic-trends': mix(4786),
+  // Молекулярная модель глюкозы
+  'chemical-bonding': mix(3768),
+  // Перемешивание жидкостей и чернил — наглядно про растворы
+  'solutions-solubility': mix(44816),
+  // Огонь и горящие частицы — окисление, энергия простых веществ
+  'oxygen-hydrogen': mix(4426),
+  // Очки и перчатки у микроскопа
+  'lab-safety': mix(4712),
+}
+
+function immersiveSrcForSlug(slug: string): string {
+  return VR_CLIP_BY_SLUG[slug] ?? mix(2091)
+}
 
 export const LESSONS: readonly Lesson[] = [
   {
@@ -27,7 +63,7 @@ export const LESSONS: readonly Lesson[] = [
     title: 'Молекула воды',
     subtitle: 'Урок 1 · H₂O',
     youtubeVideoId: 'YE7VzlLtp-4',
-    immersiveVideoSrc: DEFAULT_VR_VIDEO,
+    immersiveVideoSrc: immersiveSrcForSlug('water-molecule'),
     sections: [
       {
         heading: 'Из чего состоит вода',
@@ -39,7 +75,7 @@ export const LESSONS: readonly Lesson[] = [
       {
         heading: 'Как проходить урок',
         paragraphs: [
-          'Посмотри видео и прочитай текст. Справа — тот же ролик в «кинозале»: открой VR или AR, если хочешь смотреть на большом экране в объёме.',
+          'Посмотри видео и прочитай текст. Справа — ролик в «кинозале»: нажми «Погрузиться в VR», чтобы смотреть на большом экране в объёме.',
         ],
       },
     ],
@@ -49,7 +85,7 @@ export const LESSONS: readonly Lesson[] = [
     title: 'Кислоты: первое знакомство',
     subtitle: 'Урок 2 · основы',
     youtubeVideoId: 'YE7VzlLtp-4',
-    immersiveVideoSrc: DEFAULT_VR_VIDEO,
+    immersiveVideoSrc: immersiveSrcForSlug('acids-intro'),
     sections: [
       {
         heading: 'Что такое кислота простыми словами',
@@ -71,7 +107,7 @@ export const LESSONS: readonly Lesson[] = [
     title: 'Основания и щёлочи',
     subtitle: 'Урок 3 · pH выше нейтрали',
     youtubeVideoId: 'YE7VzlLtp-4',
-    immersiveVideoSrc: DEFAULT_VR_VIDEO,
+    immersiveVideoSrc: immersiveSrcForSlug('bases-alkali'),
     sections: [
       {
         heading: 'Что такое основание',
@@ -93,7 +129,7 @@ export const LESSONS: readonly Lesson[] = [
     title: 'Соли и нейтрализация',
     subtitle: 'Урок 4 · кислота + основание',
     youtubeVideoId: 'YE7VzlLtp-4',
-    immersiveVideoSrc: DEFAULT_VR_VIDEO,
+    immersiveVideoSrc: immersiveSrcForSlug('salts-neutralization'),
     sections: [
       {
         heading: 'Реакция нейтрализации',
@@ -115,7 +151,7 @@ export const LESSONS: readonly Lesson[] = [
     title: 'Горение и окисление',
     subtitle: 'Урок 5 · кислород и энергия',
     youtubeVideoId: 'YE7VzlLtp-4',
-    immersiveVideoSrc: DEFAULT_VR_VIDEO,
+    immersiveVideoSrc: immersiveSrcForSlug('combustion-oxidation'),
     sections: [
       {
         heading: 'Что происходит при горении',
@@ -137,7 +173,7 @@ export const LESSONS: readonly Lesson[] = [
     title: 'Периодический закон кратко',
     subtitle: 'Урок 6 · таблица Менделеева',
     youtubeVideoId: 'YE7VzlLtp-4',
-    immersiveVideoSrc: DEFAULT_VR_VIDEO,
+    immersiveVideoSrc: immersiveSrcForSlug('periodic-trends'),
     sections: [
       {
         heading: 'Свойства и место в таблице',
@@ -159,7 +195,7 @@ export const LESSONS: readonly Lesson[] = [
     title: 'Химическая связь',
     subtitle: 'Урок 7 · ионная и ковалентная',
     youtubeVideoId: 'YE7VzlLtp-4',
-    immersiveVideoSrc: DEFAULT_VR_VIDEO,
+    immersiveVideoSrc: immersiveSrcForSlug('chemical-bonding'),
     sections: [
       {
         heading: 'Ионная связь',
@@ -181,7 +217,7 @@ export const LESSONS: readonly Lesson[] = [
     title: 'Растворы и растворимость',
     subtitle: 'Урок 8 · растворитель и растворённое',
     youtubeVideoId: 'YE7VzlLtp-4',
-    immersiveVideoSrc: DEFAULT_VR_VIDEO,
+    immersiveVideoSrc: immersiveSrcForSlug('solutions-solubility'),
     sections: [
       {
         heading: 'Что такое раствор',
@@ -203,7 +239,7 @@ export const LESSONS: readonly Lesson[] = [
     title: 'Кислород и водород',
     subtitle: 'Урок 9 · простые вещества',
     youtubeVideoId: 'YE7VzlLtp-4',
-    immersiveVideoSrc: DEFAULT_VR_VIDEO,
+    immersiveVideoSrc: immersiveSrcForSlug('oxygen-hydrogen'),
     sections: [
       {
         heading: 'Кислород',
@@ -225,7 +261,7 @@ export const LESSONS: readonly Lesson[] = [
     title: 'Безопасность в лаборатории',
     subtitle: 'Урок 10 · правила и привычки',
     youtubeVideoId: 'YE7VzlLtp-4',
-    immersiveVideoSrc: DEFAULT_VR_VIDEO,
+    immersiveVideoSrc: immersiveSrcForSlug('lab-safety'),
     sections: [
       {
         heading: 'Базовые правила',
