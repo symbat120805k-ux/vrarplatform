@@ -8,6 +8,7 @@ import {
   useXRControllerLocomotion,
 } from '@react-three/xr'
 import { createXRStore } from '@react-three/xr'
+import { XRExitPanel } from '@/components/xr/XRExitPanel'
 import { QuizVRPanel } from './QuizVRPanel'
 
 const ORBIT_TARGET = [0, 1.5, -2.2] as const
@@ -60,6 +61,8 @@ export function QuizXRScene({ xrStore, onSessionChange }: QuizXRSceneProps) {
       <directionalLight position={[5, 7, 5]} intensity={0.95} castShadow />
       <directionalLight position={[-4, 5, -3]} intensity={0.32} />
       <QuizVRPanel />
+      {/* Слева от центральной панели вопросов (~x=0, z≈-2.35) */}
+      <XRExitPanel position={[-1.12, 1.5, -2.05]} />
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]} receiveShadow>
         <planeGeometry args={[14, 14]} />
         <meshStandardMaterial color="#1a2332" />

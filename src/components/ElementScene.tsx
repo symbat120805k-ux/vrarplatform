@@ -10,6 +10,7 @@ import {
 import type { ElementData } from '../data/elements'
 import { CATEGORY_COLORS } from '../data/elements'
 import { Atom3D } from './Atom3D'
+import { XRExitPanel } from './xr/XRExitPanel'
 import {
   Hydrogen3D,
   Helium3D,
@@ -309,6 +310,7 @@ export function ElementScene({ element, xrStore }: ElementSceneProps) {
         <meshStandardMaterial color="#2c3e50" />
       </mesh>
       <XRPlayerRig />
+      <XRExitPanel />
       <SessionOrbitControls target={SCENE_TARGET} maxDistance={6} />
     </XR>
   )
